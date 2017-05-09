@@ -3,8 +3,8 @@
 ###########################
 
 
-# Plotting 
-##########
+# Plotting ----
+
 
 # Ordered facetPanel Chart
 # prepares data for a multi-panel, ordered barchart
@@ -33,20 +33,56 @@ ofp_Figure <- function(df, facetPanel, barCategory, value){
   # example usage of this function :: source ROAM_exampleData.R
   
   # generate the  output data.frame
-  # ex01_Output<-ofp_Figure(ex01_Figure,"word1","word2","n") 
+  # TWO TYPES of OUPUT FIGURE :: perSite/Sample or perCategory comparisons
   
-  # plot the figure (default is absolute values)
+  ##
+  # ex01_perSite<-ofp_Figure(ex01_Figure,"word1","word2","n") 
+  
+  # ggplot(aes(barCategory, n, fill = n * score>=0), data = ex01_Output) + 
+  # geom_bar(stat = "identity", show.legend = FALSE) + 
+  # facet_wrap(~ word1, scales = "free") + 
+  # xlab("Words preceded by negation") + 
+  # ylab("Sentiment score * # of occurrences") + 
+  # theme_bw() + coord_flip() +
+  # scale_x_discrete(labels = function(x) gsub("__.+$", "", x)) # generate neat labels
+  
+  # plotting the figure (default is absolute values)
   # note :: using "mutate(nonAbs = (n*score)/abs(score))" on the input data 
   # one could easily create a waterfall plot (neg-pos scale)
+  
+  ##
+  # ex01_perCategory<-ofp_Figure(ex01_Figure,"word2","word1","n") 
+  
+  # USE word1 as first  argument aesthetic 
+  # AND facet_wrap(~word2)
+  # AND drop scale_x_discrete(labels.....) in ggplot call
+  
+  
 
-  # ggplot(aes(barCategory, n, fill = n * score>=0), data = ex01_Output) + 
-  #  geom_bar(stat = "identity", show.legend = FALSE) + 
-  #  facet_wrap(~ word1, scales = "free") + 
-  #  xlab("Words preceded by negation") + 
-  #  ylab("Sentiment score * # of occurrences") + 
-  #  theme_bw() + coord_flip() +
-  #  scale_x_discrete(labels = function(x) gsub("__.+$", "", x)) # generate neat labels
+
 
   
 }
+
+
+
+# My custom ggplot theme
+# sets sensible defaults for plotting
+# defaults are good for presensations and posters
+# requires extrafont (correctly setup once!)
+
+
+theme_plain <- function(base_size = 18, base_family = "Ubuntu")
+{
+  theme_bw(base_size = base_size, base_family = base_family) %+replace%
+    theme(panel.grid = element_line(linetype = 0)
+    )
+}
+
+
+
+
+# Object Management ----
+
+
 
