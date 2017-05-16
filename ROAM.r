@@ -16,7 +16,6 @@
 # the value (i.e numeric value; proportion, count etc.)
 # requires tidyverse (ggplot2, dplyr, magrittr, layzeval)
 
-
 ofp_Figure <- function(df, facetPanel, barCategory, value){
   require(lazyeval) # NSE function which takes named arguments
   df %>% 
@@ -57,11 +56,6 @@ ofp_Figure <- function(df, facetPanel, barCategory, value){
   # AND facet_wrap(~word2)
   # AND drop scale_x_discrete(labels.....) in ggplot call
   
-  
-
-
-
-  
 }
 
 
@@ -70,7 +64,6 @@ ofp_Figure <- function(df, facetPanel, barCategory, value){
 # sets sensible defaults for plotting
 # defaults are good for presensations and posters
 # requires extrafont (correctly setup once!)
-
 
 theme_plain <- function(base_size = 18, base_family = "Ubuntu")
 {
@@ -81,8 +74,57 @@ theme_plain <- function(base_size = 18, base_family = "Ubuntu")
 
 
 
+# lm equation annotation to ggplot
+# source: http://stackoverflow.com/questions/7549694/ggplot2-adding-regression-line-equation-and-r2-on-graph
+# author: http://stackoverflow.com/users/1492421/ricardo-saporta
+
+lmEqn_annotation = function(m) {
+  
+  l <- list(a = format(coef(m)[1], digits = 2),
+            b = format(abs(coef(m)[2]), digits = 2),
+            r2 = format(summary(m)$r.squared, digits = 3));
+  
+  if (coef(m)[2] >= 0)  {
+    eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2,l)
+  } else {
+    eq <- substitute(italic(y) == a - b %.% italic(x)*","~~italic(r)^2~"="~r2,l)    
+  }
+  
+  as.character(as.expression(eq)); 
+  
+  
+  ## example usage
+  # my.Plot <- figure.01 + 
+  #  annotate("text", x = 400, y = 40, 
+  #           label = lmEqn_annotation(lm(Yvar ~ Xvar, df)),
+  #           colour="black", size = 4, parse=TRUE)
+  
+}
+
+
+
 
 # Object Management ----
+
+# List-DF Writer
+# wrapper function to write a list of data.frames
+# arguments are.....
+# a list-df (list_df)
+# the output directory (dirout) as a "chr"
+
+listDF_writer <- function(list_df,dirout){
+  lapply(names(list_df),
+         function(x, list_df) write.table(list_df[[x]], paste(dirout,x, ".tsv", sep = ""),
+                                          col.names=NA, row.names=TRUE, sep="\t", 
+                                          quote=FALSE),
+         list_df)
+  
+  
+  ## example usage
+  # listDF_writer(listofDFs,"output/") # wrtie out data into output folder
+  
+}
+
 
 
 
