@@ -48,7 +48,7 @@ grpCom <- function(dataset,grpVar,comVar){
   return(dataset)
 }
 
-B <- function(dataset,grpVar,comVar){
+grpPlot_AVG <- function(dataset,grpVar,comVar){
   grpVar <- enquo(grpVar)
   comVar <- enquo(comVar)
   com_name <- paste0("mean_",comVar)[2]
@@ -64,15 +64,15 @@ B <- function(dataset,grpVar,comVar){
 
 
 
-qB <- B(dataset = small_pwt,currency,avh)
+qB <- grpPlot_AVG(dataset = small_pwt,currency,avh)
+
 map2(paste0(qB$currency, ".pdf"), qB$plot, ggsave)
 
 
-multiPlot <- function(dataset,grpVar,xVar,yVar){
+grpPlot_XY <- function(dataset,grpVar,xVar,yVar){
   grpVar <- enquo(grpVar)
   xVar <- enquo(xVar)
   yVar <- enquo(yVar)
-  #com_name <- paste0("mean_",xVar)[2]
   dataset %>% 
     group_by(!!grpVar) %>% 
     nest() %>% 
@@ -84,7 +84,7 @@ multiPlot <- function(dataset,grpVar,xVar,yVar){
 }
 
 
-qC <- multiPlot(dataset = pwt9.0,country,pop,avh)
+qC <- multiPlot(dataset = small_pwt,country,pop,avh)
 map2(paste0(qC$country, ".pdf"), qC$plot, ggsave)
 
 

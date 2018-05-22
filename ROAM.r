@@ -2,9 +2,87 @@
 # R Open Abstraction Module
 ###########################
 
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(purrr)
 
-# Plotting ----
+# Themes
 
+# My custom ggplot theme
+# requires extrafont (correctly setup once!)
+# sets sensible defaults for plotting
+# defaults are good for presensations and posters
+
+theme_plain <- function(base_size = 10, base_family = "Ubuntu")
+{
+  theme_bw(base_size = base_size, base_family = base_family) %+replace%
+    theme(panel.grid = element_line(linetype = 0)
+    )
+}
+
+
+# Computation and Plotting ----
+
+# NEW as of dplyr 0.6
+# requires (tidyverse) purrr
+# requires dplyr, tidyr, purrr
+
+# grouped AVG -
+# uses tidyeval from dplyr 0.6
+
+grpPlot_AVG <- function(dataset,grpVar,comVar){
+  grpVar <- enquo(grpVar)
+  comVar <- enquo(comVar)
+  com_name <- paste0("mean_",comVar)[2]
+  dataset %>% 
+    group_by(!!grpVar) %>% 
+    nest() %>% 
+    mutate(plot = map2(data, !!grpVar, ~ggplot(data=dataset,
+                                               aes_string(rlang::quo_text(grpVar),
+                                                          rlang::quo_text(comVar))) +
+                         geom_point()
+    ))
+}
+
+
+# grouped XY -
+# uses tidyeval from dplyr 0.6
+grpPlot_XY <- function(dataset,grpVar,xVar,yVar){
+  grpVar <- enquo(grpVar)
+  xVar <- enquo(xVar)
+  yVar <- enquo(yVar)
+  dataset %>% 
+    group_by(!!grpVar) %>% 
+    nest() %>% 
+    mutate(plot = map2(data, !!grpVar, ~ggplot(data=.x,
+                                               aes_string(rlang::quo_text(xVar),
+                                                          rlang::quo_text(yVar))) +
+                         geom_point() + theme_minimal()
+    ))
+}
+
+# test-data
+#library(pwt9)
+#data("pwt9.0")
+#head(pwt9.0)
+
+#country_list <- c("Botswana", "South Africa", 
+                  "Germany", "United States of America", "Switzerland")
+
+#small_pwt <- pwt9.0 %>%
+#  filter(country %in% country_list)
+
+#small_pwt <- small_pwt %>%
+#  mutate(country = factor(country, levels = country_list, ordered = TRUE))
+
+# in conjuction with map2
+#grouped_XY <- grpPlot_XY(dataset = small_pwt,country,pop,avh)
+# map2(paste0(grouped_XY$country, ".pdf"), grouped_XY$plot, ggsave)
+
+
+
+# OLD prior to dplyr 0.6
 
 # Ordered facetPanel Chart
 # prepares data for a multi-panel, ordered barchart
@@ -58,19 +136,6 @@ ofp_Figure <- function(df, facetPanel, barCategory, value){
   
 }
 
-
-
-# My custom ggplot theme
-# sets sensible defaults for plotting
-# defaults are good for presensations and posters
-# requires extrafont (correctly setup once!)
-
-theme_plain <- function(base_size = 18, base_family = "Ubuntu")
-{
-  theme_bw(base_size = base_size, base_family = base_family) %+replace%
-    theme(panel.grid = element_line(linetype = 0)
-    )
-}
 
 
 
