@@ -2,10 +2,11 @@
 # R Open Abstraction Module
 ###########################
 
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(purrr)
+#library(ggplot2)
+#library(dplyr)
+#library(tidyr)
+#library(purrr)
+#library(tidyverse)
 
 # Themes
 
@@ -41,7 +42,7 @@ grpPlot_AVG <- function(dataset,grpVar,comVar){
     mutate(plot = map2(data, !!grpVar, ~ggplot(data=dataset,
                                                aes_string(rlang::quo_text(grpVar),
                                                           rlang::quo_text(comVar))) +
-                         geom_point()
+                         geom_point() + theme_minimal()
     ))
 }
 
@@ -78,7 +79,7 @@ grpPlot_XY <- function(dataset,grpVar,xVar,yVar){
 
 # in conjuction with map2
 #grouped_XY <- grpPlot_XY(dataset = small_pwt,country,pop,avh)
-# map2(paste0(grouped_XY$country, ".pdf"), grouped_XY$plot, ggsave)
+#map2(paste0(grouped_XY$country, ".pdf"), grouped_XY$plot, ggsave)
 
 
 
