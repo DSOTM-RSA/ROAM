@@ -28,6 +28,7 @@ theme_plain <- function(base_size = 10, base_family = "Ubuntu")
 # NEW as of dplyr 0.6
 # requires (tidyverse) purrr
 # requires dplyr, tidyr, purrr
+# requires extrafont
 
 # grouped AVG -
 # uses tidyeval from dplyr 0.6
@@ -42,7 +43,7 @@ grpPlot_AVG <- function(dataset,grpVar,comVar){
     mutate(plot = map2(data, !!grpVar, ~ggplot(data=dataset,
                                                aes_string(rlang::quo_text(grpVar),
                                                           rlang::quo_text(comVar))) +
-                         geom_point() + theme_minimal()
+                         geom_point() + theme_plain()
     ))
 }
 
@@ -59,7 +60,7 @@ grpPlot_XY <- function(dataset,grpVar,xVar,yVar){
     mutate(plot = map2(data, !!grpVar, ~ggplot(data=.x,
                                                aes_string(rlang::quo_text(xVar),
                                                           rlang::quo_text(yVar))) +
-                         geom_point() + theme_minimal()
+                         geom_point() + theme_plain()
     ))
 }
 
@@ -68,8 +69,7 @@ grpPlot_XY <- function(dataset,grpVar,xVar,yVar){
 #data("pwt9.0")
 #head(pwt9.0)
 
-#country_list <- c("Botswana", "South Africa", 
-                  "Germany", "United States of America", "Switzerland")
+#country_list <- c("Germany", "United States of America", "Switzerland")
 
 #small_pwt <- pwt9.0 %>%
 #  filter(country %in% country_list)
@@ -79,7 +79,7 @@ grpPlot_XY <- function(dataset,grpVar,xVar,yVar){
 
 # in conjuction with map2
 #grouped_XY <- grpPlot_XY(dataset = small_pwt,country,pop,avh)
-#map2(paste0(grouped_XY$country, ".pdf"), grouped_XY$plot, ggsave)
+#map2(paste0(grouped_XY$country, ".png"), grouped_XY$plot, ggsave)
 
 
 
